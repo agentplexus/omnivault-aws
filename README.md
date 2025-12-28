@@ -6,9 +6,6 @@
 [![Docs][docs-godoc-svg]][docs-godoc-url]
 [![License][license-svg]][license-url]
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/agentplexus/omnivault-aws.svg)](https://pkg.go.dev/github.com/agentplexus/omnivault-aws)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
 AWS secret storage providers for [OmniVault](https://github.com/agentplexus/omnivault). Supports AWS Secrets Manager and AWS Systems Manager Parameter Store.
 
 ## Features
