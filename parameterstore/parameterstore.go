@@ -22,6 +22,7 @@ package parameterstore
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -181,7 +182,7 @@ func (p *Provider) Get(ctx context.Context, path string) (*vault.Secret, error) 
 		Metadata: vault.Metadata{
 			Provider: p.Name(),
 			Path:     path,
-			Version:  string(rune(result.Parameter.Version)),
+			Version:  strconv.FormatInt(result.Parameter.Version, 10),
 		},
 	}
 
@@ -427,7 +428,7 @@ func (p *Provider) ListVersions(ctx context.Context, path string) ([]vault.Versi
 
 		for _, h := range page.Parameters {
 			v := vault.Version{
-				ID: string(rune(h.Version)),
+				ID: strconv.FormatInt(h.Version, 10),
 			}
 			if h.LastModifiedDate != nil {
 				v.CreatedAt = &vault.Timestamp{Time: *h.LastModifiedDate}

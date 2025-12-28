@@ -23,6 +23,7 @@ package secretsmanager
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -172,7 +173,7 @@ func (p *Provider) Get(ctx context.Context, path string) (*vault.Secret, error) 
 					case string:
 						secret.Fields[k] = val
 					case float64:
-						secret.Fields[k] = json.Number(aws.ToString(aws.String(string(rune(int(val)))))).String()
+						secret.Fields[k] = strconv.FormatFloat(val, 'f', -1, 64)
 					default:
 						if b, err := json.Marshal(v); err == nil {
 							secret.Fields[k] = string(b)
@@ -451,9 +452,8 @@ func (p *Provider) ListVersions(ctx context.Context, path string) ([]vault.Versi
 // Rotate triggers rotation for a secret.
 func (p *Provider) Rotate(ctx context.Context, path string) (*vault.Secret, error) {
 	p.mu.Lock()
-	defer p.mu.Unlock()
-
 	if p.closed {
+		p.mu.Unlock()
 		return nil, vault.NewVaultError("Rotate", path, p.Name(), vault.ErrClosed)
 	}
 
@@ -463,8 +463,10 @@ func (p *Provider) Rotate(ctx context.Context, path string) (*vault.Secret, erro
 
 	_, err := p.client.RotateSecret(ctx, input)
 	if err != nil {
+		p.mu.Unlock()
 		return nil, vault.NewVaultError("Rotate", path, p.Name(), err)
 	}
+	p.mu.Unlock()
 
 	// Return the new secret value
 	return p.Get(ctx, path)

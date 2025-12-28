@@ -8,9 +8,10 @@ import (
 	"os"
 
 	"github.com/agentplexus/omnivault"
-	"github.com/agentplexus/omnivault-aws"
-	"github.com/agentplexus/omnivault-aws/secretsmanager"
 	"github.com/agentplexus/omnivault/vault"
+
+	aws "github.com/agentplexus/omnivault-aws"
+	"github.com/agentplexus/omnivault-aws/secretsmanager"
 )
 
 func main() {
@@ -53,7 +54,7 @@ func main() {
 			}
 
 			// Clean up
-			smProvider.Delete(ctx, "myapp/test-secret")
+			_ = smProvider.Delete(ctx, "myapp/test-secret")
 			fmt.Println("Deleted test secret")
 		}
 	}

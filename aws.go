@@ -29,10 +29,7 @@
 package aws
 
 import (
-	"context"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 // Config holds configuration for AWS providers.
@@ -51,23 +48,4 @@ type Config struct {
 	// AWSConfig is an optional pre-configured AWS SDK config.
 	// If provided, Region and Profile are ignored.
 	AWSConfig *aws.Config
-}
-
-// loadAWSConfig loads AWS SDK configuration.
-func loadAWSConfig(ctx context.Context, cfg Config) (aws.Config, error) {
-	if cfg.AWSConfig != nil {
-		return *cfg.AWSConfig, nil
-	}
-
-	var opts []func(*config.LoadOptions) error
-
-	if cfg.Region != "" {
-		opts = append(opts, config.WithRegion(cfg.Region))
-	}
-
-	if cfg.Profile != "" {
-		opts = append(opts, config.WithSharedConfigProfile(cfg.Profile))
-	}
-
-	return config.LoadDefaultConfig(ctx, opts...)
 }
